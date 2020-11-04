@@ -1,68 +1,57 @@
-const userRouter = require('express').Router();
-const catchError = require('../../common/catchError');
-const userService = require('./user.service');
+const router = require('express').Router();
 const User = require('./user.model');
-const { OK, NOT_FOUND } = require('http-status-codes');
+const usersService = require('./user.service');
+const asyncErrHandler = require('../../utils/async.handler');
+const { verifyId, validate } = require('../../utils/validator');
+const { ENTITY_USER: ENTITY } = require('../../common/config');
 
-userRouter.route('/').get(
-  catchError(async (req, res) => {
-    const users = await userService.getAll();
+router.route('/').get(
+  asyncErrHandler(async (req, res) => {
+    const users = await usersService.getAll();
 
-    res.status(OK).json(users.map(User.toResponse));
+    res.json(users.map(User.toResponse));
   })
 );
 
-userRouter.route('/:id').get(
-  catchError(async (req, res) => {
-    const { id } = req.params;
-    const user = await userService.getById(id);
+router.route('/:id').get(
+  asyncErrHandler(async (req, res) => {
+    const id = verifyId(req.params.id, ENTITY);
+    const user = await usersService.get(id);
 
-    if (user) {
-      res.status(OK).json(User.toResponse(user));
-    } else {
-      res.status(NOT_FOUND).send('User not found');
-    }
+    res.json(User.toResponse(user));
   })
 );
 
-userRouter.route('/').post(
-  catchError(async (req, res) => {
-    const { name, login, password } = req.body;
-    const user = await userService.create({ name, login, password });
+router.route('/').post(
+  asyncErrHandler(async (req, res) => {
+    validate(ENTITY, req.body);
+    const user = await usersService.create(req.body);
 
-    res.status(OK).json(User.toResponse(user));
+    res.json(User.toResponse(user));
   })
 );
 
-userRouter.route('/:id').put(
-  catchError(async (req, res) => {
-    const { id } = req.params;
-    const { name, login, password } = req.body;
-    const potentialUser = await userService.getById(id);
+router.route('/:id').put(
+  asyncErrHandler(async (req, res) => {
+    const id = verifyId(req.params.id, ENTITY);
+    const updatedUser = req.body;
 
-    if (potentialUser) {
-      const user = await userService.update({ id, name, login, password });
+    validate(ENTITY, updatedUser);
 
-      res.status(OK).json(User.toResponse(user));
-    } else {
-      res.status(NOT_FOUND).send('User not found');
-    }
+    await usersService.put({ id, updatedUser });
+    const user = await usersService.get(id);
+
+    res.json(User.toResponse(user));
   })
 );
 
-userRouter.route('/:id').delete(
-  catchError(async (req, res) => {
-    const { id } = req.params;
-    const potentialUser = await userService.getById(id);
+router.route('/:id').delete(
+  asyncErrHandler(async (req, res) => {
+    const id = verifyId(req.params.id, ENTITY);
+    await usersService.del(id);
 
-    if (potentialUser) {
-      const isRemoved = await userService.remove(id);
-
-      if (isRemoved) res.status(OK).send('The user has been deleted');
-    } else {
-      res.status(NOT_FOUND).send('User not found');
-    }
+    res.status(204).send('The user has been deleted');
   })
 );
 
-module.exports = userRouter;
+module.exports = router;

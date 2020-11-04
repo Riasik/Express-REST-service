@@ -1,19 +1,33 @@
-const logger = require('./common/logger');
-const dbClient = require('./db/db.client');
+const { PORT, MONGO_CONNECTION_STRING } = require('./common/config');
+const mongoose = require('mongoose');
+const logger = require('./logger/logger');
+
+const {
+  uncaughtExceptionHandler,
+  unhandledRejectionHandler,
+  errorHandler
+} = require('./errors-handler/error.handler');
+
+process.on('uncaughtException', uncaughtExceptionHandler);
+process.on('unhandledRejection', unhandledRejectionHandler);
+
 const app = require('./app');
-const { MONGO_CONNECTION_STRING, PORT } = require('./common/config');
 
-process.on('uncaughtException', error => {
-  logger.error(error.message);
-  process.exitCode = 1;
+mongoose.connect(MONGO_CONNECTION_STRING, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+  useFindAndModify: false
 });
 
-process.on('unhandledRejection', reason => {
-  logger.error(reason.message);
-});
+const db = mongoose.connection;
 
-dbClient.connect(MONGO_CONNECTION_STRING, () => {
-  app.listen(PORT, () =>
-    console.log(`App is running on http://localhost:${PORT}`)
-  );
-});
+db.on('error', () => errorHandler(new Error('MongoDB connection error'))).once(
+  'open',
+  () => {
+    logger.serverInfo('Successful connection to MongoDB');
+    app.listen(PORT, () =>
+      logger.serverInfo(`App is running on http://localhost:${PORT}`)
+    );
+  }
+);

@@ -1,92 +1,74 @@
-const taskRouter = require('express').Router();
-const catchError = require('../../common/catchError');
-const taskService = require('./task.service');
+const router = require('express').Router({ mergeParams: true });
 const Task = require('./task.model');
-const { OK, NOT_FOUND } = require('http-status-codes');
+const taskService = require('./task.service');
+const asyncErrHandler = require('../../utils/async.handler');
+const { verifyId, validate } = require('../../utils/validator');
+const { ENTITY_TASK: ENTITY } = require('../../common/config');
 
-taskRouter.route('/:boardId/tasks').get(
-  catchError(async (req, res) => {
-    const { boardId } = req.params;
-    const boardTasks = await taskService.getAllByBoardId(boardId);
+router.route('/').get(
+  asyncErrHandler(async (req, res) => {
+    const boardId = verifyId(req.params.boardId, ENTITY);
+    const tasks = await taskService.getAllByBoardId(boardId);
 
-    res.status(OK).json(boardTasks.map(Task.toResponse));
+    res.json(tasks.map(Task.toResponse));
   })
 );
 
-taskRouter.route('/:boardId/tasks/:taskId').get(
-  catchError(async (req, res) => {
-    const { boardId, taskId } = req.params;
-    const task = await taskService.getByBoardIdAndTaskId(boardId, taskId);
+router.route('/:id').get(
+  asyncErrHandler(async (req, res) => {
+    const boardId = verifyId(req.params.boardId, ENTITY);
+    const id = verifyId(req.params.id, ENTITY);
 
-    if (task) {
-      res.status(OK).json(Task.toResponse(task));
-    } else {
-      res.status(NOT_FOUND).send('Task not found');
-    }
+    const task = await taskService.getByBoardId({ id, boardId });
+
+    res.json(Task.toResponse(task[0]));
   })
 );
 
-taskRouter.route('/:boardId/tasks').post(
-  catchError(async (req, res) => {
-    const { boardId } = req.params;
-    const { title, order, description, userId, columnId } = req.body;
-    const task = await taskService.create({
-      title,
-      order,
-      description,
-      boardId,
-      userId,
-      columnId
-    });
+router.route('/').post(
+  asyncErrHandler(async (req, res) => {
+    const boardId = verifyId(req.params.boardId, ENTITY);
+    const newTask = {
+      ...req.body,
+      boardId
+    };
 
-    res.status(OK).json(Task.toResponse(task));
+    validate(ENTITY, newTask);
+
+    const task = await taskService.create(newTask);
+
+    res.json(Task.toResponse(task));
   })
 );
 
-taskRouter.route('/:boardId/tasks/:taskId').put(
-  catchError(async (req, res) => {
-    const { boardId, taskId } = req.params;
-    const { title, order, description, columnId } = req.body;
-    const potentialTask = await taskService.getByBoardIdAndTaskId(
-      boardId,
-      taskId
-    );
+router.route('/:id').put(
+  asyncErrHandler(async (req, res) => {
+    const boardId = verifyId(req.params.boardId, ENTITY);
+    const id = verifyId(req.params.id, ENTITY);
+    const newTask = {
+      ...req.body,
+      boardId
+    };
 
-    if (potentialTask) {
-      const task = await taskService.update({
-        title,
-        order,
-        description,
-        boardId,
-        taskId,
-        columnId
-      });
+    validate(ENTITY, newTask);
 
-      res.status(OK).json(Task.toResponse(task));
-    } else {
-      res.status(NOT_FOUND).send('Task not found');
-    }
+    await taskService.put({ id, boardId, newTask });
+
+    const task = await taskService.getByBoardId({ id, boardId });
+
+    res.json(Task.toResponse(task[0]));
   })
 );
 
-taskRouter.route('/:boardId/tasks/:taskId').delete(
-  catchError(async (req, res) => {
-    const { boardId, taskId } = req.params;
-    const potentialTask = await taskService.getByBoardIdAndTaskId(
-      boardId,
-      taskId
-    );
+router.route('/:id').delete(
+  asyncErrHandler(async (req, res) => {
+    const boardId = verifyId(req.params.boardId, ENTITY);
+    const id = verifyId(req.params.id, ENTITY);
 
-    if (potentialTask) {
-      const isRemoved = await taskService.remove(boardId, taskId);
+    await taskService.del({ boardId, id });
 
-      if (isRemoved) {
-        res.status(OK).send('The task has been deleted');
-      }
-    } else {
-      res.status(NOT_FOUND).send('Task not found');
-    }
+    res.status(204).send('The task has been deleted');
   })
 );
 
-module.exports = taskRouter;
+module.exports = router;

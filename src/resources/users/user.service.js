@@ -1,56 +1,40 @@
-const userDbRepository = require('./user.db.repository');
-const taskDbRepository = require('../tasks/task.db.repository');
-const bcrypt = require('bcrypt');
-const { BCRYPT_SALT_ROUNDS } = require('../../common/config');
+const usersRepo = require('./user.memory.repository');
+const tasksRepo = require('../tasks/task.memory.repository');
+const { hashByPassword } = require('../../crypto-utils/hash-helpers');
 
-const getAll = () => userDbRepository.getAll();
+const getAll = () => usersRepo.getAll();
 
-const getById = id => userDbRepository.getById(id);
+const get = id => usersRepo.get(id);
 
-const getByLogin = login => userDbRepository.getByLogin(login);
+const create = async props => {
+  const { password } = props;
 
-const getByLoginAndPassword = async userData => {
-  const { login, password } = userData;
-  const potentialUser = await getByLogin(login);
+  const hashedPassword = await hashByPassword(password);
+  const newUser = {
+    ...props,
+    password: hashedPassword
+  };
 
-  if (potentialUser) {
-    const { password: hashedPassword } = potentialUser;
-    const isMatchPassword = await bcrypt.compare(password, hashedPassword);
-
-    if (isMatchPassword) return potentialUser;
-  }
-
-  return;
+  return usersRepo.create(newUser);
 };
 
-const create = async userData => {
-  const { name, login, password } = userData;
-  const hashedPassword = await bcrypt.hash(password, +BCRYPT_SALT_ROUNDS);
+const put = async ({ id, updatedUser }) => {
+  const { password } = updatedUser;
 
-  return userDbRepository.create({ name, login, password: hashedPassword });
+  const hashedPassword =
+    password !== undefined ? await hashByPassword(password) : null;
+
+  const newUser =
+    hashedPassword === null
+      ? { ...updatedUser }
+      : { ...updatedUser, password: hashedPassword };
+
+  return usersRepo.update({ id, newUser });
 };
 
-const update = async userData => {
-  const { id, name, login, password } = userData;
-  const hashedPassword = await bcrypt.hash(password, +BCRYPT_SALT_ROUNDS);
-
-  return userDbRepository.update({ id, name, login, password: hashedPassword });
+const del = async id => {
+  await usersRepo.del(id);
+  await tasksRepo.resetUserId(id);
 };
 
-const remove = async id => {
-  const isRemoved = await userDbRepository.remove(id);
-
-  if (isRemoved) {
-    return await taskDbRepository.eraseUserIdAfterRemovingUser(id);
-  }
-};
-
-module.exports = {
-  getAll,
-  getById,
-  getByLogin,
-  getByLoginAndPassword,
-  create,
-  update,
-  remove
-};
+module.exports = { getAll, get, create, put, del };

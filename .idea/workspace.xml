@@ -1,8 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4153914c-278e-4b64-bb98-844397625f3a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CROSSCHECK.md" beforeDir="false" afterPath="$PROJECT_DIR$/CROSSCHECK.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/api.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/connection.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/app.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/error.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/crypto-utils/check-token.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/crypto-utils/hash-helpers.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/errors-handler/error.handler.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/logger/logger.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/logger/streams.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/boards/board.memory.repository.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/boards/board.model.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/boards/board.router.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/boards/board.service.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/login/login.router.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/login/login.service.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/proxy/proxy.router.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/tasks/task.memory.repository.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/tasks/task.model.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/tasks/task.router.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/tasks/task.service.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/users/user.memory.repository.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/users/user.model.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/users/user.router.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/users/user.service.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/async.handler.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/errors.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/joi.schemas.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/validator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/lib/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/lib/routes.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/test-auth/boards.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/test-auth/tasks.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/test-auth/users.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/test/boards.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/test/tasks.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/test/users.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/utils/createAuthorizedRequest.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/utils/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/e2e/utils/shouldAuthorizationBeTested.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/setup.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,11 +99,23 @@
       <workItem from="1602531005481" duration="61000" />
       <workItem from="1603127108421" duration="3472000" />
       <workItem from="1603750471097" duration="198000" />
+      <workItem from="1604779207157" duration="468000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="WindowStateProjectService">
     <state width="1419" height="231" key="GridCell.Tab.0.bottom" timestamp="1603127219955">
